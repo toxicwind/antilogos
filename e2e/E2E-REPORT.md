@@ -1,7 +1,7 @@
-# duel E2E Report (t3-e2e)
+# antilogos E2E Report (t3-e2e)
 
-Date: 2026-09-20 · Corpus: `killer-features/duel/tasks/` (5 tasks, 39 hidden pytest tests)
-Harness: `killer-features/duel/e2e/` · Model lanes via estate-scripts-router :25104
+Date: 2026-09-20 · Corpus: `killer-features/antilogos/tasks/` (5 tasks, 39 hidden pytest tests)
+Harness: `killer-features/antilogos/e2e/` · Model lanes via estate-scripts-router :25104
 
 ## Corpus
 
