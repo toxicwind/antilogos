@@ -1,0 +1,21 @@
+....F..                                                                  [100%]
+=================================== FAILURES ===================================
+________________________________ test_wait_time ________________________________
+
+fake_clock = [1000.0]
+
+    def test_wait_time(fake_clock):
+        now = fake_clock
+        b = TokenBucket(10, 2)
+        assert b.allow(10) is True
+>       assert b.wait_time(4) == pytest.approx(2.0)
+E       assert 0.0 == 2.0 ± 2.0e-06
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 2.0 ± 2.0e-06
+
+../../../../../../../tasks/token-bucket/tests/test_token_bucket.py:49: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_token_bucket.py::test_wait_time - assert 0.0 == 2.0 ± 2.0e-06
+1 failed, 6 passed in 0.01s

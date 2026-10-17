@@ -1,0 +1,54 @@
+..FFF..                                                                  [100%]
+=================================== FAILURES ===================================
+____________________________ test_refill_over_time _____________________________
+
+fake_clock = [1002.5]
+
+    def test_refill_over_time(fake_clock):
+        now = fake_clock
+        b = TokenBucket(10, 2)          # 2 tokens/sec
+        assert b.allow(10) is True
+        now[0] += 2.5                   # +5 tokens
+>       assert b.allow(5) is True
+E       assert False is True
+E        +  where False = allow(5)
+E        +    where allow = <token_bucket.TokenBucket object at 0x7f9df6337d90>.allow
+
+../../../../../../../tasks/token-bucket/tests/test_token_bucket.py:31: AssertionError
+____________________________ test_fractional_tokens ____________________________
+
+fake_clock = [1003.0]
+
+    def test_fractional_tokens(fake_clock):
+        now = fake_clock
+        b = TokenBucket(5, 0.5)
+        assert b.allow(5) is True
+        now[0] += 3                     # +1.5 tokens
+>       assert b.allow(1.5) is True
+E       assert False is True
+E        +  where False = allow(1.5)
+E        +    where allow = <token_bucket.TokenBucket object at 0x7f9df63a10f0>.allow
+
+../../../../../../../tasks/token-bucket/tests/test_token_bucket.py:42: AssertionError
+________________________________ test_wait_time ________________________________
+
+fake_clock = [1000.0]
+
+    def test_wait_time(fake_clock):
+        now = fake_clock
+        b = TokenBucket(10, 2)
+        assert b.allow(10) is True
+        assert b.wait_time(4) == pytest.approx(2.0)
+>       assert b.wait_time() == pytest.approx(0.5)
+E       assert 0.49992823600769043 == 0.5 ± 5.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.49992823600769043
+E         Expected: 0.5 ± 5.0e-07
+
+../../../../../../../tasks/token-bucket/tests/test_token_bucket.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_token_bucket.py::test_refill_over_time - assert False is True
+FAILED tests/test_token_bucket.py::test_fractional_tokens - assert False is True
+FAILED tests/test_token_bucket.py::test_wait_time - assert 0.4999282360076904...
+3 failed, 4 passed in 0.02s

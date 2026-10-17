@@ -1,0 +1,52 @@
+.......FF.                                                               [100%]
+=================================== FAILURES ===================================
+__________________________ test_real_cycle_reporting ___________________________
+
+    def test_real_cycle_reporting():
+        edges = [("a", "b"), ("b", "c"), ("c", "a"), ("c", "d")]
+        with pytest.raises(CycleError) as ei:
+            topological_order(["a", "b", "c", "d"], edges)
+>       _assert_real_cycle(ei.value.cycle, edges)
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cycle = ['a', 'a'], edges = [('a', 'b'), ('b', 'c'), ('c', 'a'), ('c', 'd')]
+
+    def _assert_real_cycle(cycle, edges):
+        edge_set = set(edges)
+        assert len(cycle) >= 2, "cycle too short: %r" % (cycle,)
+        assert cycle[0] == cycle[-1], "first node not repeated at end: %r" % (cycle,)
+        for u, v in zip(cycle, cycle[1:]):
+>           assert (u, v) in edge_set, "pair (%r, %r) is not an actual edge" % (u, v)
+E           AssertionError: pair ('a', 'a') is not an actual edge
+E           assert ('a', 'a') in {('a', 'b'), ('b', 'c'), ('c', 'a'), ('c', 'd')}
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:56: AssertionError
+_________________________ test_real_cycle_reporting_2 __________________________
+
+    def test_real_cycle_reporting_2():
+        edges = [("x", "y"), ("y", "z"), ("z", "y")]
+        with pytest.raises(CycleError) as ei:
+            topological_order(["x", "y", "z"], edges)
+>       _assert_real_cycle(ei.value.cycle, edges)
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cycle = ['y', 'y'], edges = [('x', 'y'), ('y', 'z'), ('z', 'y')]
+
+    def _assert_real_cycle(cycle, edges):
+        edge_set = set(edges)
+        assert len(cycle) >= 2, "cycle too short: %r" % (cycle,)
+        assert cycle[0] == cycle[-1], "first node not repeated at end: %r" % (cycle,)
+        for u, v in zip(cycle, cycle[1:]):
+>           assert (u, v) in edge_set, "pair (%r, %r) is not an actual edge" % (u, v)
+E           AssertionError: pair ('y', 'y') is not an actual edge
+E           assert ('y', 'y') in {('x', 'y'), ('y', 'z'), ('z', 'y')}
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:56: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_toposort.py::test_real_cycle_reporting - AssertionError: pa...
+FAILED tests/test_toposort.py::test_real_cycle_reporting_2 - AssertionError: ...
+2 failed, 8 passed in 0.02s

@@ -1,0 +1,58 @@
+...F.F...F                                                               [100%]
+=================================== FAILURES ===================================
+__________________________ test_lex_smallest_tiebreak __________________________
+
+    def test_lex_smallest_tiebreak():
+        # diamond: a->b, a->c, b->d, c->d ; valid orders: abcd, acbd -> abcd wins
+        order = topological_order(["a", "b", "c", "d"],
+                                  [("a", "b"), ("a", "c"), ("b", "d"), ("c", "d")])
+>       assert order == ["a", "b", "c", "d"]
+E       AssertionError: assert ['a', 'c', 'b', 'd'] == ['a', 'b', 'c', 'd']
+E         
+E         At index 1 diff: 'c' != 'b'
+E         Use -v to get more diff
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:30: AssertionError
+___________________________ test_unknown_node_raises ___________________________
+
+    def test_unknown_node_raises():
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:39: Failed
+_________________________ test_bruteforce_lex_minimal __________________________
+
+    def test_bruteforce_lex_minimal():
+        rng = random.Random(42)
+        for trial in range(30):
+            n = rng.randint(2, 6)
+            nodes = list(range(n))
+            edges = [(u, v) for u in nodes for v in nodes
+                     if u != v and rng.random() < 0.3]
+            # skip cyclic graphs for the ordering check
+            try:
+                got = topological_order(nodes, edges)
+            except CycleError:
+                continue
+            # brute force the lex-smallest valid order
+            best = None
+            for perm in itertools.permutations(nodes):
+                pos = {x: i for i, x in enumerate(perm)}
+                if all(pos[u] < pos[v] for u, v in edges):
+                    if best is None or perm < best:
+                        best = perm
+            assert best is not None
+>           assert list(got) == list(best), "trial %d: got %r want %r" % (trial, got, best)
+E           AssertionError: trial 3: got [1, 0] want (0, 1)
+E           assert [1, 0] == [0, 1]
+E             
+E             At index 0 diff: 1 != 0
+E             Use -v to get more diff
+
+../../../../../tasks/shakedown-toposort/tests/test_toposort.py:93: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_toposort.py::test_lex_smallest_tiebreak - AssertionError: a...
+FAILED tests/test_toposort.py::test_unknown_node_raises - Failed: DID NOT RAI...
+FAILED tests/test_toposort.py::test_bruteforce_lex_minimal - AssertionError: ...
+3 failed, 7 passed in 0.02s
