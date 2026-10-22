@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# antilogos rig — primary operation, deterministic + self-sufficient.
+# antilogos is an adversarial verification engine: models debate a candidate,
+# an oracle weighs the arguments, and a gate only ships a verdict that survived.
+# A live debate-run needs model lanes (creds, network). This rig surfaces the
+# engine cost: task inventory + lane router config. Run debates on-demand via
+# `bin/debate --task <dir> --candidates <files>`.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+echo "=== antilogos: tasks ==="
+if [ -d tasks ]; then
+  ls tasks | tr '\n' ' '; echo
+else
+  echo "(no tasks/ dir)"
+fi
+
+echo "=== antilogos: lanes/router config ==="
+grep -rhoE 'lanes[^,}]*|router[^,}]*' prompts/*.md INTERFACE.md 2>/dev/null | head -5 || true
+echo "(inspect prompts/ for lane setup)"
+
+echo "=== antilogos: gate surface ==="
+echo "bin/debate (assembly) + bin/gate.py (verdict gate) + bin/oracle.py (weighting)"

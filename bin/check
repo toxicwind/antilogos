@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# antilogos check gate — fast deterministic self-test with PASS/FAIL exit.
+# Byte-compiles the engine modules + imports the gate + oracle (no network).
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+fail=0
+
+PYSRC='bin/gate.py bin/oracle.py bin/brief.py bin/brief-code.py'
+if python3 -m py_compile $PYSRC >/dev/null 2>&1; then
+  echo "PASS byte-compile"
+else
+  echo "FAIL byte-compile"
+  fail=1
+fi
+
+if python3 - <<'PY' >/dev/null 2>&1
+import importlib.util, sys
+for m, p in (("gate", "bin/gate.py"), ("oracle", "bin/oracle.py")):
+    spec = importlib.util.spec_from_file_location(m, p)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[m] = mod
+    spec.loader.exec_module(mod)
+print("import-ok")
+PY
+then
+  echo "PASS import-gate-oracle"
+else
+  echo "FAIL import-gate-oracle"
+  fail=1
+fi
+
+for f in bin/debate bin/debate-run; do
+  if [ -x "$f" ]; then echo "PASS exec $f"; else echo "FAIL exec $f"; fail=1; fi
+done
+
+if [ "$fail" -eq 0 ]; then
+  echo "ANTILOGOS CHECK: PASS"
+  exit 0
+fi
+echo "ANTILOGOS CHECK: FAIL"
+exit 1
