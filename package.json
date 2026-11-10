@@ -1,0 +1,30 @@
+{
+  "name": "antilogos",
+  "version": "0.1.0",
+  "description": "Adversarial verification engine: multi-model debate, oracle weighing, and gated verdicts.",
+  "main": "bin/index.ts",
+  "bin": {
+    "gate": "./bin/gate.ts",
+    "router": "./bin/router.ts",
+    "debate": "./bin/debate.ts"
+  },
+  "scripts": {
+    "dev": "bun --hot run bin/index.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "biome check .",
+    "fmt": "biome format --write .",
+    "build": "bun build bin/index.ts --outdir ./dist"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "bun-types": "latest",
+    "typescript": "^5.0.0",
+    "@biomejs/biome": "^1.8.0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "type": "module",
+  "private": true
+}
